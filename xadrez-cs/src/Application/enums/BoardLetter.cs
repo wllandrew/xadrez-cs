@@ -1,6 +1,6 @@
 namespace Application
 {
-    public enum Letters
+    public enum BoardLetter
     {
         A = 0,
         B = 1,

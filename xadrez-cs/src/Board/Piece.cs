@@ -8,11 +8,11 @@ namespace Board
         public Colors Color { get; set; }
         public ChessBoard Board { get; set; }
 
-        public Piece(Position position, Colors color, ChessBoard board)
+        public Piece(Colors color, ChessBoard board)
         {
-            this.Position = position;
             this.Color = color;
             this.Board = board;
+            this.Position = null;
         }
 
     }
