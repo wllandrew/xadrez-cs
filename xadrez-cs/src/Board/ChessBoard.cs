@@ -1,6 +1,5 @@
 using System;
 using Pieces;
-using Pieces;
 
 namespace Board
 {
@@ -19,15 +18,46 @@ namespace Board
             this.InitialSetting();
         }
 
+        // Método GetPiece() utiliza sobrecarga 
         public Piece GetPiece(int row, int column)
         {
+
             return this.Board[row, column];
+        }
+
+        public Piece GetPiece(Position pos)
+        {
+            return this.Board[pos.Row, pos.Column];
         }
 
         public void SetPiece(Piece piece, Position pos)
         {
-            this.Board[pos.Row, pos.Column] = piece;
-            piece.Position = pos;
+            if (!this.Exists(pos))
+            {
+                this.Board[pos.Row, pos.Column] = piece;
+                piece.Position = pos;
+            }
+            else
+            {
+                throw new ChessBoardException("Piece already placed in this position");
+            }
+        }
+
+        private void IsValid(Position pos)
+        {
+            if (pos.Row < 0
+                || pos.Row < this.Row
+                || pos.Column < 0
+                || pos.Row > this.Column)
+            {
+                throw new ChessBoardException("Position is out of board range.");
+            }
+        }
+
+        private bool Exists(Position pos)
+        {
+            this.IsValid(pos);
+            return this.Board[pos.Row, pos.Column] != null;
         }
 
         public void InitialSetting()

@@ -2,7 +2,7 @@ using System;
 
 namespace Board
 {
-    public class Position
+    public struct Position
     {
         public int Row { get; set; }
         public int Column { get; set; }
