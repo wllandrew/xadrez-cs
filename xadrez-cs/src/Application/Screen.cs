@@ -1,4 +1,3 @@
-using System;
 using Board;
 
 namespace Application
@@ -19,13 +18,27 @@ namespace Application
                     }
                     else
                     {
-                        Console.Write($"{board.Board[i, j]} ");
+                        PrintPiece(board.Board[i, j]);
                     }
                 } 
 
                 Console.WriteLine("");
             }
             Console.WriteLine("  a b c d e f g h");
+        }
+
+        public static void PrintPiece(Piece p)
+        {
+            if (p.Color == Colors.Black)
+            {
+                Console.ForegroundColor = ConsoleColor.DarkMagenta;
+                Console.Write(p + " ");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+            else
+            {
+                Console.Write(p + " ");
+            }
         }
     }
 }

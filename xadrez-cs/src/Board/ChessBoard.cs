@@ -32,7 +32,7 @@ namespace Board
 
         public void SetPiece(Piece piece, Position pos)
         {
-            if (!this.Exists(pos))
+            if (this.Exists(pos))
             {
                 this.Board[pos.Row, pos.Column] = piece;
                 piece.Position = pos;
@@ -43,10 +43,22 @@ namespace Board
             }
         }
 
+        // Returns the removed piece
+        public Piece? RemovePiece(Position p)
+        {
+            if (Exists(p))
+            {
+                var pp = this.GetPiece(p);
+                this.Board[p.Row, p.Column] = null;
+                return pp;
+            }
+            return null;
+        }
+
         private void IsValid(Position pos)
         {
             if (pos.Row < 0
-                || pos.Row < this.Row
+                || pos.Row > this.Row
                 || pos.Column < 0
                 || pos.Row > this.Column)
             {
