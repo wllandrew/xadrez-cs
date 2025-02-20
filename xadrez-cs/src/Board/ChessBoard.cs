@@ -50,21 +50,25 @@ namespace Board
             return null;
         }
 
-        private void IsValid(Position pos)
+        public bool IsValid(Position pos)
         {
             if (pos.Row < 0
                 || pos.Row > this.Row
                 || pos.Column < 0
                 || pos.Row > this.Column)
             {
-                throw new ChessBoardException("Position is out of board range.");
+                return false;
             }
+            return true;
         }
 
         private bool Exists(Position pos)
         {
-            this.IsValid(pos);
-            return this.Board[pos.Row, pos.Column] != null;
+            if (this.IsValid(pos))
+            {
+                return this.Board[pos.Row, pos.Column] != null;            
+            }
+            return false;
         }
     }
 }
