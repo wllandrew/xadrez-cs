@@ -1,16 +1,13 @@
-using System;
-
 namespace Board
 {
-    public struct Position
+    public struct Position(int row, int column)
     {
-        public int Row { get; set; }
-        public int Column { get; set; }
+        public int Row { get; set; } = row;
+        public int Column { get; set; } = column;
 
-        public Position(int row, int column)
+        public readonly bool Equals(Position pos)
         {
-            this.Row = row;
-            this.Column = column;
+            return Row.Equals(pos) && Column.Equals(pos.Column);
         }
     }
 }

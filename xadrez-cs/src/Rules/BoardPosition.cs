@@ -3,20 +3,14 @@ using Board;
 
 namespace Rules;
 
-public struct BoardPosition
+public struct BoardPosition(char row, int column)
 {
-    public char Row;
-    public int Column;
-
-    public BoardPosition(char row, int column)
-    {
-        this.Row = row;
-        this.Column = column;
-    }
+    public char Row = row;
+    public int Column = column;
 
     // Usar essa lógica escala melhor do que um enum
-    public Position ToPosition()
+    public readonly Position ToPosition()
     {
-        return new Position(this.Row - 'a' , 8 - this.Column);
+        return new Position(8 - this.Column, this.Row - 'a');
     }
 }

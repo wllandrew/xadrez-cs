@@ -9,8 +9,23 @@ class Program
 {
     static void Main(string[] args)
     {
-        var match = new ChessMatch();
+        var game = new ChessMatch();
 
-        match.Routine();
+        try
+        {
+            while (game.Active)
+            {
+                Screen.PrintGame(game);
+                Console.Write("From: ");
+                var input = Screen.ReadPosition().ToPosition();
+                Console.Write("\nTo: ");
+                var output = Screen.ReadPosition().ToPosition();
+                game.Move(input, output);
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
     }
 }
