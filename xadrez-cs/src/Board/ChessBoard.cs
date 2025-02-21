@@ -16,13 +16,20 @@ namespace Board
         // Método GetPiece() utiliza sobrecarga 
         public Piece? GetPiece(int row, int column)
         {
-
-            return this.Board[row, column];
+            if (IsValid(new Position(row, column)))
+            {
+                return this.Board[row, column];
+            }
+            throw new ChessBoardException("Invalid Position.");
         }
 
         public Piece? GetPiece(Position pos)
         {
-            return this.Board[pos.Row, pos.Column];
+            if (IsValid(pos))
+            {
+                return this.Board[pos.Row, pos.Column];
+            }
+            throw new ChessBoardException("Invalid Position.");
         }
 
         public void SetPiece(Piece piece, Position pos)

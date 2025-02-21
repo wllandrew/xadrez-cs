@@ -39,11 +39,12 @@ class Program
                     game.ValidateFinal(input, output);
                     game.RealizeTurn(input, output);
                 }
-                catch (ChessGameException cge)
+                catch (Exception e) when (e is ChessBoardException || e is ChessGameException)
                 {
-                    Console.WriteLine("\n" + cge.Message);
+                    Console.WriteLine("\n" + e.Message);
                     Console.ReadLine();
                 }
+
             }
         }
         catch (Exception ex)
