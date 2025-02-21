@@ -53,9 +53,9 @@ namespace Board
         public bool IsValid(Position pos)
         {
             if (pos.Row < 0
-                || pos.Row > this.Row
+                || pos.Row >= this.Row
                 || pos.Column < 0
-                || pos.Row > this.Column)
+                || pos.Column >= this.Column)
             {
                 return false;
             }

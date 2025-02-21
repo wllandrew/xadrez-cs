@@ -10,21 +10,6 @@ namespace Pieces
             return "R";
         }
 
-        public override bool CanMove(Position position)
-        {
-            if (!Board.IsValid(position))
-            {
-                return false;
-            }
-
-            var p = Board.GetPiece(position);
-            if (p == null || p.Color != this.Color)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public override bool[,] GetMovements()
         {
             var res = new bool[Board.Row, Board.Column];
@@ -52,6 +37,12 @@ namespace Pieces
             while (CanMove(p))
             {
                 res[p.Row, p.Column] = true;
+
+                if (Board.GetPiece(p) != null)
+                {
+                    break;
+                }
+
                 if (line == 'c')
                 {
                     p.Column += change;

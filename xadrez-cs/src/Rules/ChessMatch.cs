@@ -19,7 +19,11 @@ public class ChessMatch
         this.Board = new ChessBoard();
         this.Turn = 0;
         this.Active = true;
-        Board.SetPiece(new King(Colors.White, Board), new Position(1, 3)); 
+        Board.SetPiece(new Rook(Colors.White, Board), new Position(1, 3)); 
+        Board.SetPiece(new Pawn(Colors.Black, Board), new Position(6, 1)); 
+        Board.SetPiece(new King(Colors.Black, Board), new Position(6, 3)); 
+        Board.SetPiece(new Bishop(Colors.Black, Board), new Position(2, 2));
+        Board.SetPiece(new Queen(Colors.Black, Board), new Position(4, 2));
     }
 
     public void InitialSetting()

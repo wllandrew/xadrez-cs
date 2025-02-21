@@ -12,21 +12,6 @@ namespace Pieces
             return "K";
         }
 
-        public override bool CanMove(Position position)
-        {
-            if (!Board.IsValid(position))
-            {
-                return false;
-            }
-
-            var p = Board.GetPiece(position);
-            if (p == null || p.Color != this.Color)
-            {
-                return true;
-            }
-            return false;
-        }
-
         public override bool[,] GetMovements()
         {
             // Inicializa valores como false

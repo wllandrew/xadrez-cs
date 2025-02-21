@@ -12,5 +12,9 @@ namespace Pieces
             return "N";
         }
 
+        public override bool[,] GetMovements()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
