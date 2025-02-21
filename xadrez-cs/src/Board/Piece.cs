@@ -12,9 +12,22 @@ namespace Board
             this.Board = board;
         }
 
-        // Lógica deve ser abstrata pois é unica para cada peça
-        public abstract bool CanMove(Position position);
+        public bool CanMove(Position position)
+        {
+            if (!Board.IsValid(position))
+            {
+                return false;
+            }
 
+            var p = Board.GetPiece(position);
+            if (p == null || p.Color != this.Color)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        // Lógica deve ser abstrata pois é unica para cada peça
         public abstract bool[,] GetMovements();
     }
 }
