@@ -94,4 +94,12 @@ public class ChessMatch
         }
     }
 
+    public void ValidateFinal(Position inicial, Position final)
+    {
+        if (!Board.GetPiece(inicial)!.CouldMoveTo(final))
+        {
+            throw new ChessGameException("Selected piece cannot move to this position.");
+        }
+    }
+
 }

@@ -44,6 +44,11 @@ namespace Board
             return false;
         }
 
+        public bool CouldMoveTo(Position pos)
+        {
+            return GetMovements()[pos.Row, pos.Column];
+        }
+
         // Lógica deve ser abstrata pois é unica para cada peça
         public abstract bool[,] GetMovements();
     }

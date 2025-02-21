@@ -36,6 +36,7 @@ class Program
                     // Recebe input da posição final
                     Console.Write("\nTo: ");
                     var output = Screen.ReadPosition().ToPosition();
+                    game.ValidateFinal(input, output);
                     game.RealizeTurn(input, output);
                 }
                 catch (ChessGameException cge)
