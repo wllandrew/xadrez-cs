@@ -14,6 +14,11 @@ namespace Pieces
 
         public override bool CanMove(Position position)
         {
+            if (!Board.IsValid(position))
+            {
+                return false;
+            }
+
             var p = Board.GetPiece(position);
             if (p == null || p.Color != this.Color)
             {

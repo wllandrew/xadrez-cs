@@ -19,7 +19,7 @@ public class ChessMatch
         this.Board = new ChessBoard();
         this.Turn = 0;
         this.Active = true;
-        this.InitialSetting();
+        Board.SetPiece(new King(Colors.White, Board), new Position(1, 3)); 
     }
 
     public void InitialSetting()
