@@ -3,13 +3,64 @@ using Board;
 
 namespace Pieces
 {
-    public class Rook : Piece
+    public class Rook(Colors color, ChessBoard board) : Piece(color, board)
     {
-        public Rook(Colors color, ChessBoard board) : base(color, board) {}
-    
         public override string ToString()
         {
             return "R";
+        }
+
+        public override bool CanMove(Position position)
+        {
+            if (!Board.IsValid(position))
+            {
+                return false;
+            }
+
+            var p = Board.GetPiece(position);
+            if (p == null || p.Color != this.Color)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public override bool[,] GetMovements()
+        {
+            var res = new bool[Board.Row, Board.Column];
+
+            TraverseLine(ref res, 1, 'c');
+            TraverseLine(ref res, -1, 'c');
+            TraverseLine(ref res, 1, 'r');
+            TraverseLine(ref res, -1, 'r');
+
+            return res;
+        }
+
+        // Para evitar repetições desnecessárias de código
+        private void TraverseLine(ref bool[,] res, int change, char line)
+        {
+            Position p;
+            if (line == 'c')
+            {
+                p = new Position(Position.Row, Position.Column + change);
+            }
+            else
+            {
+                p = new Position(Position.Row + change, Position.Column);
+            }
+            while (CanMove(p))
+            {
+                res[p.Row, p.Column] = true;
+                if (line == 'c')
+                {
+                    p.Column += change;
+                }
+                else 
+                {
+                    p.Row += change;
+                }
+            }
         }
     }
 }

@@ -1,3 +1,4 @@
+using System.Drawing;
 using Board;
 using Rules;
 
@@ -9,10 +10,9 @@ namespace Application
         public static void PrintGame(ChessMatch game)
         {
             Screen.PrintBoard(game.Board);
-            System.Console.WriteLine("\n");
             Screen.PrintList(game.WhitePieces, Colors.White);
             Screen.PrintList(game.BlackPieces, Colors.Black);
-            System.Console.WriteLine("\n");
+            System.Console.WriteLine("");
         }
         public static void PrintBoard(ChessBoard board)
         {
@@ -22,23 +22,47 @@ namespace Application
 
                 for (int j = 0; j < board.Column; j++)
                 {
-                    if (board.Board[i, j] == null)
-                    {
-                        Console.Write("- ");
-                    }
-                    else
-                    {
-                        PrintPiece(board.Board[i, j]!);
-                    }
+                    PrintPiece(board.GetPiece(i, j));
                 } 
 
                 Console.WriteLine("");
             }
-            Console.WriteLine("\n    a b c d e f g h");
+            Console.WriteLine("\n    a b c d e f g h\n");
         }
 
-        public static void PrintPiece(Piece p)
+        public static void PrintBoard(ChessBoard board, bool[,] possible)
         {
+            for (int i = 0; i < board.Row; i++)
+            {
+                Console.Write($"{board.Row - i}   ");
+
+                for (int j = 0; j < board.Column; j++)
+                {
+                    if (possible[i, j] == true)
+                    {
+                        Console.BackgroundColor = ConsoleColor.DarkGray;
+                    } 
+                    else
+                    {
+                        Console.BackgroundColor = ConsoleColor.Black;
+                    }
+                    PrintPiece(board.Board[i, j]);
+                } 
+                Console.BackgroundColor = ConsoleColor.Black;
+                Console.WriteLine("");
+            }
+            Console.BackgroundColor = ConsoleColor.Black;
+            Console.WriteLine("\n    a b c d e f g h\n");
+        }
+
+        public static void PrintPiece(Piece? p)
+        {
+            if (p == null)
+            {
+                Console.Write("- ");
+                return;
+            }
+
             if (p.Color == Colors.Black)
             {
                 Console.ForegroundColor = ConsoleColor.DarkMagenta;
