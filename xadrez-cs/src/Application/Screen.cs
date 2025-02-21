@@ -10,6 +10,7 @@ namespace Application
         public static void PrintGame(ChessMatch game)
         {
             Screen.PrintBoard(game.Board);
+            Screen.PrintTurn(game.Turn);
             Screen.PrintList(game.WhitePieces, Colors.White);
             Screen.PrintList(game.BlackPieces, Colors.Black);
             System.Console.WriteLine("");
@@ -90,6 +91,14 @@ namespace Application
                 Screen.PrintPiece(piece);
             }
             System.Console.WriteLine("]");
+        }
+
+        public static void PrintTurn(int turn)
+        {
+            string c = (turn % 2 == 1) ? "White" : "Black";
+
+            Console.WriteLine($"Turn: {turn}");
+            Console.WriteLine($"{c} moves.\n");
         }
 
         public static BoardPosition ReadPosition()

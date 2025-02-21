@@ -18,7 +18,7 @@ namespace Pieces
 
             var counter = (Position.Row == 1 || Position.Row == 6) ? 2 : 1;
 
-            var change = (Color == Colors.Black) ? -1 : 1;
+            var change = (Color == Colors.Black) ? 1 : -1;
 
             for (int i = 1; i <= counter; i++)
             {

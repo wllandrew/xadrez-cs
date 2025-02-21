@@ -9,7 +9,7 @@ namespace Rules;
 public class ChessMatch
 {
     public ChessBoard Board;
-    public int Turn;
+    public int Turn { get; private set ;}
     public List<Piece> BlackPieces = [];
     public List<Piece> WhitePieces = [];
     public bool Active;
@@ -17,21 +17,23 @@ public class ChessMatch
     public ChessMatch()
     {
         this.Board = new ChessBoard();
-        this.Turn = 0;
+        this.Turn = 1;
         this.Active = true;
-        Board.SetPiece(new Rook(Colors.White, Board), new Position(1, 3)); 
-        Board.SetPiece(new Pawn(Colors.Black, Board), new Position(6, 1)); 
-        Board.SetPiece(new King(Colors.Black, Board), new Position(6, 3)); 
-        Board.SetPiece(new Bishop(Colors.Black, Board), new Position(2, 2));
-        Board.SetPiece(new Queen(Colors.Black, Board), new Position(4, 2));
+        this.InitialSetting();
+    }
+
+    public void RealizeTurn(Position initial, Position final)
+    {
+        this.Move(initial, final);
+        this.Turn++;
     }
 
     public void InitialSetting()
     {
-        for (int i = 0; i < Board.Row; i++)
+        for (int i = 0; i < Board.Column; i++)
         {
-            Board.Board[1, i] = new Pawn(Colors.Black, Board);
-            Board.Board[6, i] = new Pawn(Colors.White, Board);
+            Board.SetPiece(new Pawn(Colors.White, Board), new Position(6, i));
+            Board.SetPiece(new Pawn(Colors.Black, Board), new Position(1, i));
         }
 
         Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 0));
@@ -72,6 +74,23 @@ public class ChessMatch
         else if (endPiece != null && endPiece.Color == Colors.Black)
         {
             BlackPieces.Add(endPiece);
+        }
+    }
+
+    public void ValidateInitial(Position p)
+    {
+        if (Board.GetPiece(p) == null)
+        {
+            throw new ChessGameException("Selected position does not match a valid piece.");
+        }
+        if (Board.GetPiece(p)!.Color == Colors.White && Turn % 2 != 1
+            || Board.GetPiece(p)!.Color == Colors.Black && Turn % 2 != 0)
+        {
+            throw new ChessGameException("Selected piece color does not match the current turn's color.");
+        }
+        if (!Board.GetPiece(p)!.IsThereMovements())
+        {
+            throw new ChessGameException("There is no possible movements for this piece.");
         }
     }
 

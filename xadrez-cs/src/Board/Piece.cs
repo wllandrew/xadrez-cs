@@ -27,6 +27,23 @@ namespace Board
             return false;
         }
 
+        public bool IsThereMovements()
+        {
+            bool[,] movements = GetMovements();
+            
+            for (int i = 0; i < Board.Row; i++)
+            {
+                for (int j = 0; j < Board.Column; j++)
+                {
+                    if (movements[i, j] == true)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
         // Lógica deve ser abstrata pois é unica para cada peça
         public abstract bool[,] GetMovements();
     }
