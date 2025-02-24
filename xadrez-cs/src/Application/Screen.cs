@@ -104,11 +104,11 @@ namespace Application
         public static BoardPosition ReadPosition()
         {
             string? s = Console.ReadLine();
-            if (s == null || s.Length != 2)
+            if (s == null || s.Length != 2 || !char.IsLetter(s[0]) || !char.IsDigit(s[1]))
             {
                 throw new BoardInputException("Invalid Input");
             }
-            return new BoardPosition(s[0], int.Parse(s[1] + ""));
+            return new BoardPosition(s![0], int.Parse(s[1] + ""));
         }
     }
 }
