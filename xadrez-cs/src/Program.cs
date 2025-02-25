@@ -48,6 +48,10 @@ class Program
                     Console.ReadLine();
                 }
 
+                Console.Clear();
+                Screen.PrintBoard(game.Board);
+                Console.WriteLine($"\nWinner is {game.Winner}");
+
             }
         }
         catch (Exception ex)

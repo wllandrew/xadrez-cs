@@ -16,6 +16,7 @@ public class ChessMatch
     public List<Piece> InGamePieces = [];
     public bool Check;
     public bool Active;
+    public Colors Winner;
     public Colors CurrentPlayer {
         get {
             return (Turn % 2 == 0) ? Colors.Black : Colors.White;
@@ -45,6 +46,11 @@ public class ChessMatch
         }
         else if (IsInCheck(Oponent(CurrentPlayer)))
         {
+            if (CheckMate(Oponent(CurrentPlayer)))
+            {
+                Winner = CurrentPlayer;
+                Active = false;
+            }
             Check = true;
         }
         else
@@ -201,5 +207,32 @@ public class ChessMatch
             }
         }
         return false;
+    }
+
+    public bool CheckMate(Colors c)
+    {
+        Piece king = GetKing(c)!;
+        bool[,] mov = king.GetMovements();
+
+        for (int i = 0; i < Board.Row; i++)
+        {
+            for (int j = 0; j < Board.Column; j++)
+            {
+                if (mov[i, j])
+                {
+                    Position p1 = king.Position;
+                    Position p2 = new Position(i, j);
+                    Piece? pp = Move(p1, p2);
+                    bool condition = IsInCheck(c);
+                    RevertMove(p1, p2, pp);
+
+                    if (!condition)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
     }
 }
