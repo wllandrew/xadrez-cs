@@ -11,6 +11,7 @@ namespace Application
         {
             Screen.PrintBoard(game.Board);
             Screen.PrintTurn(game.Turn);
+            Screen.PrintCheck(game.CurrentPlayer, game.Check);
             Screen.PrintList(game.WhitePieces, Colors.White);
             Screen.PrintList(game.BlackPieces, Colors.Black);
             System.Console.WriteLine("");
@@ -109,6 +110,14 @@ namespace Application
                 throw new BoardInputException("Invalid Input");
             }
             return new BoardPosition(s![0], int.Parse(s[1] + ""));
+        }
+
+        public static void PrintCheck(Colors c, bool cond)
+        {
+            if (cond)
+            {
+                Console.WriteLine($"{c} is in check.\n");
+            }
         }
     }
 }

@@ -14,15 +14,23 @@ public class ChessMatch
     public List<Piece> BlackPieces = [];
     public List<Piece> WhitePieces = [];
     public List<Piece> InGamePieces = [];
-    public bool IsCheck;
+    public bool Check;
     public bool Active;
-    
+    public Colors CurrentPlayer {
+        get {
+            return (Turn % 2 == 0) ? Colors.Black : Colors.White;
+        }
+    }
+
     public ChessMatch()
     {
         this.Board = new ChessBoard();
         this.Turn = 1;
         this.Active = true;
-        this.InitialSetting();
+        Board.SetPiece(new King(Colors.Black, Board), new Position(0, 4));
+        Board.SetPiece(new King(Colors.White, Board), new Position(7, 4));
+        Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 2));
+        Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 3));
         this.InitialList();
     }
 
@@ -30,10 +38,18 @@ public class ChessMatch
     {
         var endpiece = this.Move(initial, final);
 
-        if (IsInCheck(Board.GetPiece(final)!.Color))
+        if (IsInCheck(CurrentPlayer))
         {
-            RevertMove(final, initial, endpiece);
+            RevertMove(initial, final, endpiece);
             throw new ChessGameException("Cannot realize movement as it puts king in check.");
+        }
+        else if (IsInCheck(Oponent(CurrentPlayer)))
+        {
+            Check = true;
+        }
+        else
+        {
+            Check = false;
         }
 
         this.Turn++;
@@ -48,21 +64,21 @@ public class ChessMatch
         }
 
         Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 0));
-        //Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 1));
+        Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 1));
         Board.SetPiece(new Bishop(Colors.Black, Board), new Position(0, 2));
         Board.SetPiece(new Queen(Colors.Black, Board), new Position(0, 3));
         Board.SetPiece(new King(Colors.Black, Board), new Position(0, 4));
         Board.SetPiece(new Bishop(Colors.Black, Board), new Position(0, 5));
-        //Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 6));
+        Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 6));
         Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 7));
 
         Board.SetPiece(new Rook(Colors.White, Board), new Position(7, 0));
-        //Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 1));
+        Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 1));
         Board.SetPiece(new Bishop(Colors.White, Board), new Position(7, 2));
         Board.SetPiece(new Queen(Colors.White, Board), new Position(7, 3));
         Board.SetPiece(new King(Colors.White, Board), new Position(7, 4));
         Board.SetPiece(new Bishop(Colors.White, Board), new Position(7, 5));
-        //Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 6));
+        Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 6));
         Board.SetPiece(new Rook(Colors.White, Board), new Position(7, 7));
     }
 
@@ -110,9 +126,10 @@ public class ChessMatch
     // Reverte o movimento caso seja cheque.
     public void RevertMove(Position initial, Position final, Piece? former)
     {
-        var p = Board.GetPiece(final);
+        var p = Board.GetPiece(final)!;
 
-        Board.SetPiece(p!, initial);
+        Board.SetPiece(p, initial);
+        var s = Board.RemovePiece(final);
         
         if (former != null)
         {
@@ -133,10 +150,6 @@ public class ChessMatch
         if (Board.GetPiece(p) == null)
         {
             throw new ChessGameException("Selected position does not match a valid piece.");
-        }
-        if (IsInCheck(Board.GetPiece(p)!.Color))
-        {
-            throw new ChessGameException("The king in in check.");
         }
         if (Board.GetPiece(p)!.Color == Colors.White && Turn % 2 != 1
             || Board.GetPiece(p)!.Color == Colors.Black && Turn % 2 != 0)
@@ -161,11 +174,12 @@ public class ChessMatch
     {
         return (c == Colors.White) ? Colors.Black : Colors.White;
     }
+
     public King? GetKing(Colors c)
     {
-        foreach(Piece p in InGamePieces)
+        foreach(Piece p in InGamePieces.Where(p => p.Color == c))
         {
-            if (p is King && p.Color == c)
+            if (p is King)
             {
                 return p as King;
             }
@@ -175,9 +189,9 @@ public class ChessMatch
 
     public bool IsInCheck(Colors color)
     {
-        var king = GetKing(color);
+        var king = GetKing(color)!;
 
-        foreach (var piece in InGamePieces.Where(p => p.Color == color))
+        foreach (var piece in InGamePieces.Where(p => p.Color != color))
         {
             var possibles = piece.GetMovements();
 
@@ -188,5 +202,4 @@ public class ChessMatch
         }
         return false;
     }
-
 }
