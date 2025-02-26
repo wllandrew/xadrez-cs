@@ -16,7 +16,7 @@ public class ChessMatch
     public List<Piece> InGamePieces = [];
     public bool Check { get; private set; }
     public bool Active;
-    public Piece? PossibleEnPassant;
+    public Piece? PossibleEnPassant = null;
     public Colors? Winner { get; private set; } = null;
     public Colors CurrentPlayer {
         get {
@@ -36,8 +36,17 @@ public class ChessMatch
     public void RealizeTurn(Position initial, Position final)
     {
         var InitialPiece = Board.GetPiece(initial)!;
-        var endpiece = this.Move(initial, final);
+        var EndPiece = this.Move(initial, final);
 
+        MateAndCheck(EndPiece, initial, final);
+        CastlingCheck(InitialPiece, initial, final);
+        EnPassantCheck(InitialPiece, initial, final);
+
+        this.Turn++;
+    }
+
+    private void MateAndCheck(Piece? endpiece, Position initial, Position final)
+    {
         if (IsInCheck(CurrentPlayer))
         {
             RevertMove(initial, final, endpiece);
@@ -56,8 +65,10 @@ public class ChessMatch
         {
             Check = false;
         }
+    }
 
-        // Como posso simplificar isso?
+    private void CastlingCheck(Piece InitialPiece, Position initial, Position final)
+    {
         if (InitialPiece is King && final.Column - 2 == initial.Column)
         {
             var rook = Board.RemovePiece(new Position(initial.Row, initial.Column + 3));
@@ -75,10 +86,16 @@ public class ChessMatch
             var k = Board.GetPiece(final) as King;
             k!.HasMoved = true;
         }
+    }
 
+    private void EnPassantCheck(Piece InitialPiece, Position initial, Position final)
+    {
         if (InitialPiece is Pawn && final.Column != initial.Column)
+        {
+            var i = Board.RemovePiece(PossibleEnPassant!.Position);
+        }
 
-        if (InitialPiece is Pawn && final.Row == final.Row + 2 || final.Row == final.Row - 2)
+        if (InitialPiece is Pawn && initial.Row == final.Row + 2 || initial.Row == final.Row - 2)
         {
             PossibleEnPassant = InitialPiece;
         }
@@ -86,8 +103,6 @@ public class ChessMatch
         {
             PossibleEnPassant = null;
         }
-
-        this.Turn++;
     }
 
     private void InitialSetting()

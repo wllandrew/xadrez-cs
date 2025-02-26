@@ -33,15 +33,24 @@ namespace Pieces
                 }
             }
 
-            if (Game.PossibleEnPassant != null 
-                && Board.GetPiece(Position.Row, Position.Column - 1) == Game.PossibleEnPassant
-                || Board.GetPiece(Position.Row, Position.Column + 1) == Game.PossibleEnPassant)
-            {
-                var i = (Color == Colors.Black) ? -1 : 1;
-                res[Game.PossibleEnPassant!.Position.Row, Game.PossibleEnPassant!.Position.Column + i] = true;
-            }
+            EnPassantCheck(ref res, 1);
+            EnPassantCheck(ref res, -1);
 
             return res;
+        }
+
+        private void EnPassantCheck(ref bool[,] res, int change)
+        {
+            var ep1 = new Position(Position.Row, Position.Column + change);
+            if (Board.IsValid(ep1))
+            {
+                var p = Board.GetPiece(ep1);
+                if (p != null && p == Game.PossibleEnPassant)
+                {
+                    var columnChange = (Color == Colors.Black) ? 1 : -1;
+                    res[ep1.Row + columnChange, ep1.Column] = true;
+                }
+            }
         }
     }
 }
