@@ -1,11 +1,16 @@
 using System;
 using Board;
+using Rules;
 
 namespace Pieces
 {
     public class Pawn : Piece
     {
-        public Pawn(Colors color, ChessBoard board) : base(color, board) {}
+        public ChessMatch Game;
+        public Pawn(Colors color, ChessBoard board, ChessMatch game) : base(color, board) 
+        {
+            this.Game = game;
+        }
 
         public override string ToString()
         {
@@ -26,6 +31,14 @@ namespace Pieces
                 {
                     res[Position.Row + (i * change), Position.Column] = true;
                 }
+            }
+
+            if (Game.PossibleEnPassant != null 
+                && Board.GetPiece(Position.Row, Position.Column - 1) == Game.PossibleEnPassant
+                || Board.GetPiece(Position.Row, Position.Column + 1) == Game.PossibleEnPassant)
+            {
+                var i = (Color == Colors.Black) ? -1 : 1;
+                res[Game.PossibleEnPassant!.Position.Row, Game.PossibleEnPassant!.Position.Column + i] = true;
             }
 
             return res;

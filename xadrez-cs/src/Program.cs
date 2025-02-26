@@ -44,7 +44,7 @@ class Program
                     || e is ChessGameException
                     || e is BoardInputException)
                 {
-                    Console.WriteLine("\n" + e.Message);
+                    Console.WriteLine("\n" + e.StackTrace);
                     Console.ReadLine();
                 }
 

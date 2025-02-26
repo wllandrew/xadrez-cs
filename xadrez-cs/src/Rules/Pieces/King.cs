@@ -1,11 +1,17 @@
 using System;
 using Board;
+using Rules;
 
 namespace Pieces
 {
     public class King : Piece
     {
-        public King(Colors color, ChessBoard board) : base(color, board) {}
+        public bool HasMoved { get; set; } = false;
+        public ChessMatch Match;
+        public King(Colors color, ChessBoard board, ChessMatch match) : base(color, board) 
+        {
+            this.Match = match;
+        }
 
         public override string ToString()
         {
@@ -28,7 +34,55 @@ namespace Pieces
                 }
             }
 
+            if (!HasMoved && !Match.Check)
+            {
+                if (CheckForBigCastle())
+                {   
+                    res[Position.Row, Position.Column + 2] = true;
+                }
+                if (CheckForSmallCastle())
+                {
+                    res[Position.Row, Position.Column - 2] = true;                
+                }   
+            }
+
             return res;
         }
-    }
+
+        private bool CheckForSmallCastle()
+        {
+            for (int i = Position.Column + 1; i < Board.Column; i++)
+            {
+                Piece? n = Board.GetPiece(new Position(Position.Row, i));
+
+                if (i < Board.Column - 1 && n != null)
+                {
+                    return false;
+                }
+                else if (i == Board.Column - 1 && (n is not Rook || n?.Color != this.Color))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        private bool CheckForBigCastle()
+        {
+            for (int i = Position.Column - 1; i >= 0; i--)
+            {
+                Piece? n = Board.GetPiece(new Position(Position.Row, i));
+
+                if (i > 1  && n != null)
+                {
+                    return false;
+                }
+                else if (i == 0 && (n is not Rook || n.Color != this.Color))
+                {
+                    return false;
+                }
+            }
+            return true;   
+        }
+    }   
 }

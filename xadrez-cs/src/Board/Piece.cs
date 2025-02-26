@@ -3,8 +3,8 @@ namespace Board
     public abstract class Piece
     {
         public Position Position { get; set; }
-        public Colors Color { get; set; }
-        public ChessBoard Board { get; set; }
+        public Colors Color { get; private set; }
+        public ChessBoard Board { get; private set; }
 
         public Piece(Colors color, ChessBoard board)
         {

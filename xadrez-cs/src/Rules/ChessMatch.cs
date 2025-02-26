@@ -14,9 +14,10 @@ public class ChessMatch
     public List<Piece> BlackPieces = [];
     public List<Piece> WhitePieces = [];
     public List<Piece> InGamePieces = [];
-    public bool Check;
+    public bool Check { get; private set; }
     public bool Active;
-    public Colors Winner;
+    public Piece? PossibleEnPassant;
+    public Colors? Winner { get; private set; } = null;
     public Colors CurrentPlayer {
         get {
             return (Turn % 2 == 0) ? Colors.Black : Colors.White;
@@ -28,15 +29,13 @@ public class ChessMatch
         this.Board = new ChessBoard();
         this.Turn = 1;
         this.Active = true;
-        Board.SetPiece(new King(Colors.Black, Board), new Position(0, 4));
-        Board.SetPiece(new King(Colors.White, Board), new Position(7, 4));
-        Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 2));
-        Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 3));
+        this.InitialSetting();
         this.InitialList();
     }
 
     public void RealizeTurn(Position initial, Position final)
     {
+        var InitialPiece = Board.GetPiece(initial)!;
         var endpiece = this.Move(initial, final);
 
         if (IsInCheck(CurrentPlayer))
@@ -58,22 +57,52 @@ public class ChessMatch
             Check = false;
         }
 
+        // Como posso simplificar isso?
+        if (InitialPiece is King && final.Column - 2 == initial.Column)
+        {
+            var rook = Board.RemovePiece(new Position(initial.Row, initial.Column + 3));
+            Board.SetPiece(rook!, new Position(final.Row, final.Column - 1));
+
+        }
+        else if (InitialPiece is King && final.Column + 2 == initial.Column)
+        {
+            var rook = Board.RemovePiece(new Position(initial.Row, initial.Column - 4));
+            Board.SetPiece(rook!, new Position(final.Row, final.Column + 1));
+        }
+
+        if (InitialPiece is King)
+        {
+            var k = Board.GetPiece(final) as King;
+            k!.HasMoved = true;
+        }
+
+        if (InitialPiece is Pawn && final.Column != initial.Column)
+
+        if (InitialPiece is Pawn && final.Row == final.Row + 2 || final.Row == final.Row - 2)
+        {
+            PossibleEnPassant = InitialPiece;
+        }
+        else
+        {
+            PossibleEnPassant = null;
+        }
+
         this.Turn++;
     }
 
-    public void InitialSetting()
+    private void InitialSetting()
     {
         for (int i = 0; i < Board.Column; i++)
         {
-            Board.SetPiece(new Pawn(Colors.White, Board), new Position(6, i));
-            Board.SetPiece(new Pawn(Colors.Black, Board), new Position(1, i));
+            Board.SetPiece(new Pawn(Colors.White, Board, this), new Position(6, i));
+            Board.SetPiece(new Pawn(Colors.Black, Board, this), new Position(1, i));
         }
 
         Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 0));
         Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 1));
         Board.SetPiece(new Bishop(Colors.Black, Board), new Position(0, 2));
         Board.SetPiece(new Queen(Colors.Black, Board), new Position(0, 3));
-        Board.SetPiece(new King(Colors.Black, Board), new Position(0, 4));
+        Board.SetPiece(new King(Colors.Black, Board, this), new Position(0, 4));
         Board.SetPiece(new Bishop(Colors.Black, Board), new Position(0, 5));
         Board.SetPiece(new Knight(Colors.Black, Board), new Position(0, 6));
         Board.SetPiece(new Rook(Colors.Black, Board), new Position(0, 7));
@@ -82,7 +111,7 @@ public class ChessMatch
         Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 1));
         Board.SetPiece(new Bishop(Colors.White, Board), new Position(7, 2));
         Board.SetPiece(new Queen(Colors.White, Board), new Position(7, 3));
-        Board.SetPiece(new King(Colors.White, Board), new Position(7, 4));
+        Board.SetPiece(new King(Colors.White, Board, this), new Position(7, 4));
         Board.SetPiece(new Bishop(Colors.White, Board), new Position(7, 5));
         Board.SetPiece(new Knight(Colors.White, Board), new Position(7, 6));
         Board.SetPiece(new Rook(Colors.White, Board), new Position(7, 7));
@@ -103,7 +132,7 @@ public class ChessMatch
     }
 
     // Posso melhorar a lógica dividindo em métodos menores.
-    public Piece? Move(Position position1, Position position2)
+    private Piece? Move(Position position1, Position position2)
     {
         var startPiece = Board.RemovePiece(position1);
         var endPiece = Board.RemovePiece(position2);
@@ -130,7 +159,7 @@ public class ChessMatch
     }
 
     // Reverte o movimento caso seja cheque.
-    public void RevertMove(Position initial, Position final, Piece? former)
+    private void RevertMove(Position initial, Position final, Piece? former)
     {
         var p = Board.GetPiece(final)!;
 
@@ -197,7 +226,7 @@ public class ChessMatch
     {
         var king = GetKing(color)!;
 
-        foreach (var piece in InGamePieces.Where(p => p.Color != color))
+        foreach (var piece in InGamePieces.Where(p => p.Color == Oponent(CurrentPlayer)))
         {
             var possibles = piece.GetMovements();
 
