@@ -14,7 +14,7 @@
 
 1. Clone o repositório em sua máquina:
 ```bash
-git clone 
+git clone https://github.com/wllandrew/xadrez-cs.git
 ```
 2. Na pasta do projeto, execute o comando:
 ```bash
