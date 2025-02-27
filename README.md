@@ -1,4 +1,4 @@
-### Projeto Xadrez no Console : C# .NET
+# Projeto Xadrez no Console : C# .NET
 
 ## 📌 Apresentação
 
