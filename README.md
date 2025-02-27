@@ -8,15 +8,15 @@
 
 ## 📜Requisitos
 
-- .Net Core 8
+-[.Net Core 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
 ## 🚀 Como executar
 
 1. Clone o repositório em sua máquina:
-'''bash
+```bash
 git clone 
-'''
+```
 2. Na pasta do projeto, execute o comando:
-'''bash
+```bash
 dotnet run
-'''
+```
