@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using Board;
 using Application;
 using Pieces;
-using System.Drawing;
 
 namespace Rules;
 
@@ -38,6 +37,7 @@ public class ChessMatch
         var InitialPiece = Board.GetPiece(initial)!;
         var EndPiece = this.Move(initial, final);
 
+        PromotionCheck(InitialPiece,initial, final, EndPiece);
         MateAndCheck(EndPiece, initial, final);
         CastlingCheck(InitialPiece, initial, final);
         EnPassantCheck(InitialPiece, initial, final);
@@ -50,7 +50,7 @@ public class ChessMatch
         if (IsInCheck(CurrentPlayer))
         {
             RevertMove(initial, final, endpiece);
-            throw new ChessGameException("Cannot realize movement as it puts king in check.");
+            throw new ChessGameException($"{CurrentPlayer} King is in check.");
         }
         else if (IsInCheck(Oponent(CurrentPlayer)))
         {
@@ -88,7 +88,7 @@ public class ChessMatch
         }
     }
 
-    private void EnPassantCheck(Piece InitialPiece, Position initial, Position final)
+    private void EnPassantCheck(Piece InitialPiece, Position initial, Position final)   
     {
         if (InitialPiece is Pawn && final.Column != initial.Column)
         {
@@ -102,6 +102,51 @@ public class ChessMatch
         else
         {
             PossibleEnPassant = null;
+        }
+    }
+
+    // Melhorar lógica
+    public void PromotionCheck(Piece InitialPiece, Position initial, Position final, Piece? former)
+    {
+        Piece? newPiece = null;
+
+        if (InitialPiece is Pawn 
+            && InitialPiece.Color == Colors.White && final.Row == 0 
+            || (InitialPiece.Color == Colors.Black && final.Row == 7))
+        {
+            Console.Write("\nPromotion to (Q, R, B, N): ");
+            var s = Console.ReadLine();
+            if (s == null || s!.Length > 1)
+            {
+                throw new ChessGameException("Invalid input.");
+            }
+
+            if (s.Equals("Q"))
+            {
+                newPiece = new Queen(InitialPiece.Color, Board);
+            }
+            else if (s.Equals("R"))
+            {
+                newPiece = new Rook(InitialPiece.Color, Board);
+            }
+            else if (s.Equals("B"))
+            {
+                newPiece = new Bishop(InitialPiece.Color, Board);
+            }
+            else if (s.Equals("N"))
+            {
+                newPiece = new Knight(InitialPiece.Color, Board);            
+            }
+            else
+            {
+                RevertMove(initial, final, former);
+                throw new ChessGameException("Invalid input.");
+            }
+
+            var old = Board.RemovePiece(InitialPiece.Position);
+            InGamePieces.Remove(old!);
+            Board.SetPiece(newPiece!, final);
+            InGamePieces.Add(newPiece);
         }
     }
 
@@ -241,7 +286,7 @@ public class ChessMatch
     {
         var king = GetKing(color)!;
 
-        foreach (var piece in InGamePieces.Where(p => p.Color == Oponent(CurrentPlayer)))
+        foreach (var piece in InGamePieces.Where(p => p.Color == Oponent(color)))
         {
             var possibles = piece.GetMovements();
 
