@@ -27,16 +27,33 @@ namespace Pieces
 
             for (int i = 1; i <= counter; i++)
             {
-                if (CanMove(new Position(Position.Row  + (i * change), Position.Column)))
+                var n = new Position(Position.Row  + (i * change), Position.Column);
+                if (CanMove(n)
+                    && Board.GetPiece(n) is null)
                 {
                     res[Position.Row + (i * change), Position.Column] = true;
                 }
             }
 
+            CanTake(ref res, 1);
+            CanTake(ref res, -1);
+
             EnPassantCheck(ref res, 1);
             EnPassantCheck(ref res, -1);
 
             return res;
+        }
+
+        // Checa de pode captura peças na diagonal
+        private void CanTake(ref bool[,] res, int counter)
+        {
+            var change = (Color == Colors.Black) ? 1 : -1;
+            var p = new Position(Position.Row + change, Position.Column + counter);
+
+            if (Board.IsValid(p) && Board.GetPiece(p) is not null)
+            {
+                res[p.Row, p.Column] = true;
+            }
         }
 
         private void EnPassantCheck(ref bool[,] res, int change)

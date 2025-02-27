@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("xadrez-cs")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+4d2d641ce2d8db02cf1e4912c68a0feaa6e71ab3")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b15d279457a5188e298b7152c5a40fc8ef34d2e4")]
 [assembly: System.Reflection.AssemblyProductAttribute("xadrez-cs")]
 [assembly: System.Reflection.AssemblyTitleAttribute("xadrez-cs")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

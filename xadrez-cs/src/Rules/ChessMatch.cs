@@ -90,7 +90,12 @@ public class ChessMatch
 
     private void EnPassantCheck(Piece InitialPiece, Position initial, Position final)   
     {
-        if (InitialPiece is Pawn && final.Column != initial.Column)
+        int change = (CurrentPlayer == Colors.Black) ? 1 : -1;
+
+        if (InitialPiece is Pawn
+            && PossibleEnPassant is not null
+            && PossibleEnPassant?.Position.Row == final.Column + 1
+            || PossibleEnPassant?.Position.Row == final.Column + 1)
         {
             var i = Board.RemovePiece(PossibleEnPassant!.Position);
         }
