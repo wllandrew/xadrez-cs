@@ -50,7 +50,7 @@ namespace Pieces
             var change = (Color == Colors.Black) ? 1 : -1;
             var p = new Position(Position.Row + change, Position.Column + counter);
 
-            if (Board.IsValid(p) && Board.GetPiece(p) is not null)
+            if (Board.IsValid(p) && Board.GetPiece(p) is not null && Board.GetPiece(p)?.Color != Color)
             {
                 res[p.Row, p.Column] = true;
             }
@@ -62,7 +62,7 @@ namespace Pieces
             if (Board.IsValid(ep1))
             {
                 var p = Board.GetPiece(ep1);
-                if (p != null && p == Game.PossibleEnPassant)
+                if (p != null && p == Game.PossibleEnPassant && p.Color != Color)
                 {
                     var columnChange = (Color == Colors.Black) ? 1 : -1;
                     res[ep1.Row + columnChange, ep1.Column] = true;

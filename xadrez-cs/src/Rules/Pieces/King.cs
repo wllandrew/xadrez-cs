@@ -38,11 +38,11 @@ namespace Pieces
             {
                 if (CheckForBigCastle())
                 {   
-                    res[Position.Row, Position.Column + 2] = true;
+                    res[Position.Row, Position.Column - 2] = true;
                 }
                 if (CheckForSmallCastle())
                 {
-                    res[Position.Row, Position.Column - 2] = true;                
+                    res[Position.Row, Position.Column + 2] = true;                
                 }   
             }
 
@@ -53,9 +53,9 @@ namespace Pieces
         {
             for (int i = Position.Column + 1; i < Board.Column; i++)
             {
-                Piece? n = Board.GetPiece(new Position(Position.Row, i));
+                Piece? n = Board.GetPiece(Position.Row, i);
 
-                if (i < Board.Column - 1 && n != null)
+                if (i < Board.Column - 1 && n is not null)
                 {
                     return false;
                 }
@@ -71,9 +71,9 @@ namespace Pieces
         {
             for (int i = Position.Column - 1; i >= 0; i--)
             {
-                Piece? n = Board.GetPiece(new Position(Position.Row, i));
+                Piece? n = Board.GetPiece(Position.Row, i);
 
-                if (i > 1  && n != null)
+                if (i >= 1  && n is not null)
                 {
                     return false;
                 }

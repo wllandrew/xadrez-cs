@@ -35,12 +35,12 @@ public class ChessMatch
     public void RealizeTurn(Position initial, Position final)
     {
         var InitialPiece = Board.GetPiece(initial)!;
-        var EndPiece = this.Move(initial, final);
-
-        PromotionCheck(InitialPiece,initial, final, EndPiece);
-        MateAndCheck(EndPiece, initial, final);
         CastlingCheck(InitialPiece, initial, final);
         EnPassantCheck(InitialPiece, initial, final);
+        
+        var EndPiece = this.Move(initial, final);
+        PromotionCheck(InitialPiece,initial, final, EndPiece);
+        MateAndCheck(EndPiece, initial, final);
 
         this.Turn++;
     }
@@ -73,29 +73,28 @@ public class ChessMatch
         {
             var rook = Board.RemovePiece(new Position(initial.Row, initial.Column + 3));
             Board.SetPiece(rook!, new Position(final.Row, final.Column - 1));
+            var k = GetKing(CurrentPlayer);
+            k!.HasMoved = true; 
 
         }
         else if (InitialPiece is King && final.Column + 2 == initial.Column)
         {
             var rook = Board.RemovePiece(new Position(initial.Row, initial.Column - 4));
             Board.SetPiece(rook!, new Position(final.Row, final.Column + 1));
-        }
-
-        if (InitialPiece is King)
-        {
-            var k = Board.GetPiece(final) as King;
-            k!.HasMoved = true;
+            var k = GetKing(CurrentPlayer);
+            k!.HasMoved = true; 
         }
     }
 
     private void EnPassantCheck(Piece InitialPiece, Position initial, Position final)   
     {
-        int change = (CurrentPlayer == Colors.Black) ? 1 : -1;
+        var change = (CurrentPlayer == Colors.Black) ? 1 : -1;
 
         if (InitialPiece is Pawn
             && PossibleEnPassant is not null
-            && PossibleEnPassant?.Position.Row == final.Column + 1
-            || PossibleEnPassant?.Position.Row == final.Column + 1)
+            && PossibleEnPassant?.Position.Row == final.Column + change
+            && (PossibleEnPassant?.Position.Column == final.Column - 1
+            || PossibleEnPassant?.Position.Column == final.Column + 1))
         {
             var i = Board.RemovePiece(PossibleEnPassant!.Position);
         }
