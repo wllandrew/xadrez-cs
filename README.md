@@ -29,5 +29,7 @@ dotnet run
 
 ### Demonstração
 
-![gif-xadrez](https://github.com/user-attachments/assets/c689cf0d-e103-456d-a487-56204ffa6966)
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/c689cf0d-e103-456d-a487-56204ffa6966"  alt="animated"/>
+</p>
 
