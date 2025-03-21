@@ -8,15 +8,26 @@
 
 ## 📜Requisitos
 
--[.Net Core 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
+-[.NET Core 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 
-## 🚀 Como executar
+## 🚀 Como jogar
+
+### Acessar o repositório
 
 1. Clone o repositório em sua máquina:
 ```bash
 git clone https://github.com/wllandrew/xadrez-cs.git
 ```
-2. Na pasta do projeto, execute o comando:
+2. Acesse a pasta do repositório:
+```bash
+cd xadrez-cs
+```
+4. Na pasta do projeto, execute o comando:
 ```bash
 dotnet run
 ```
+
+### Demonstração
+
+![gif-xadrez](https://github.com/user-attachments/assets/c689cf0d-e103-456d-a487-56204ffa6966)
+
